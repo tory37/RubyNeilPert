@@ -34,6 +34,7 @@ public abstract class MonoFSM : MonoBehaviour {
 		}
 
 		currentState = states.Values.ElementAt( 0 );
+		currentState.OnEnter();
 	}
 
 	protected abstract void SetStates();

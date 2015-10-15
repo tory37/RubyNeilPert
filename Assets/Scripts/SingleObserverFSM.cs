@@ -30,7 +30,6 @@ public class SingleObserverFSM : MonoFSM
 	public Transform pusherPeg;
 	public Transform dinoHorse;
 	public Transform rocket;
-	public Transform camera;
 	public Transform hologram;
 	public Transform door;
 	public GameObject explosion;
@@ -94,6 +93,11 @@ public class StartState : State
 		fsm = SingleObserverFSM.Instance;
 	}
 
+	public override void OnEnter()
+	{
+		Debug.Log("Entering Start");
+	}
+
 	public override void CheckTransitions()
 	{
 		if ( Input.GetKeyDown( KeyCode.Space ) )
@@ -103,7 +107,8 @@ public class StartState : State
 
 	public override void OnExit()
 	{
-		GameObject.Destroy( fsm.ballBlocker );
+		fsm.ballBlocker.GetComponent<Collider>().enabled = false;
+		fsm.ballBlocker.GetComponent<Renderer>().enabled = false;
 	}
 }
 
