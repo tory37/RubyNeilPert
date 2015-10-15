@@ -25,6 +25,9 @@ public class SingleObserverFSM : MonoFSM
 
 	#region Editor Interface
 
+	public AudioClip scratch;
+	public AudioClip song;
+
 	[Header( "Objects" )]
 	public GameObject ballBlocker;
 	public Transform pusherPeg;
@@ -33,6 +36,7 @@ public class SingleObserverFSM : MonoFSM
 	public Transform hologram;
 	public Transform door;
 	public GameObject explosion;
+	public Canvas endMessage;
 
 	[Header( "Values" )]
 	public float pusherPegSpeed;
@@ -109,6 +113,7 @@ public class StartState : State
 	{
 		fsm.ballBlocker.GetComponent<Collider>().enabled = false;
 		fsm.ballBlocker.GetComponent<Renderer>().enabled = false;
+		AudioSource.PlayClipAtPoint(fsm.scratch, Camera.main.transform.position);
 	}
 }
 
@@ -132,6 +137,11 @@ public class BallsFallingState : State, IObserver
 	{
 		if ( message == (int)Messages.HitButton )
 			transition = true;
+	}
+
+	public override void OnExit()
+	{
+		AudioSource.PlayClipAtPoint(fsm.song, Camera.main.transform.position);
 	}
 
 	public override void CheckTransitions()
@@ -300,6 +310,7 @@ public class EndState : State
 		Vector3 position = fsm.rocket.position;
 		GameObject.Destroy(fsm.rocket.gameObject);
 		GameObject.Instantiate( fsm.explosion, position, Quaternion.identity );
+		fsm.endMessage.enabled = true;
 
 		Debug.Log( "Done Bitch" );
 	}
